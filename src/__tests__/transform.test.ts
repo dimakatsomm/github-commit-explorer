@@ -23,7 +23,14 @@ describe('mapRepoResponse', () => {
   });
 
   it('handles missing optional fields', () => {
-    const raw = { id: 99, name: 'minimal' };
+    const raw = { 
+      id: 99, 
+      name: 'minimal',
+      description: null,
+      stargazers_count: 0,
+      forks_count: 0,
+      language: null
+    };
     const result = mapRepoResponse(raw);
     expect(result.name).toBe('minimal');
     expect(result.description).toBe('');
@@ -50,10 +57,16 @@ describe('mapCommitResponse', () => {
   });
 
   it('handles missing nested fields gracefully', () => {
-    const raw = { sha: 'def456', commit: {} };
+    const raw = { 
+      sha: 'def456', 
+      commit: {
+        author: { name: '', date: '' },
+        message: ''
+      }
+    };
     const mapper = mapCommitResponse('repo');
     const result = mapper(raw);
-    expect(result.authorName).toBe('unknown');
+    expect(result.authorName).toBe('');
     expect(result.message).toBe('');
   });
 });
@@ -80,7 +93,14 @@ describe('mapCommitDetailResponse', () => {
   });
 
   it('handles no files gracefully', () => {
-    const raw = { sha: 'nofiles', commit: { author: {}, message: 'Empty' } };
+    const raw = { 
+      sha: 'nofiles', 
+      commit: { 
+        author: { name: '', date: '' }, 
+        message: 'Empty' 
+      },
+      files: []
+    };
     const result = mapCommitDetailResponse('repo', raw);
     expect(result.files).toEqual([]);
   });

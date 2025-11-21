@@ -1,8 +1,9 @@
 import type { Repo } from '@/types/repo';
 import type { CommitSummary, CommitDetail, CommitFileDiff } from '@/types/commit';
+import type { GitHubRepoResponse, GitHubCommitResponse, GitHubCommitDetailResponse } from '@/types/github-api';
 import { formatIsoDate } from '@/utils/formatting';
 
-export function mapRepoResponse(raw: any): Repo {
+export function mapRepoResponse(raw: GitHubRepoResponse): Repo {
   return {
     id: String(raw.id),
     name: raw.name ?? 'unknown',
@@ -14,7 +15,7 @@ export function mapRepoResponse(raw: any): Repo {
 }
 
 export function mapCommitResponse(repoName: string) {
-  return (raw: any): CommitSummary => {
+  return (raw: GitHubCommitResponse): CommitSummary => {
     return {
       sha: raw.sha,
       authorName: raw.commit?.author?.name ?? 'unknown',
@@ -25,9 +26,9 @@ export function mapCommitResponse(repoName: string) {
   };
 }
 
-export function mapCommitDetailResponse(repoName: string, raw: any): CommitDetail {
+export function mapCommitDetailResponse(repoName: string, raw: GitHubCommitDetailResponse): CommitDetail {
   const files: CommitFileDiff[] = Array.isArray(raw.files)
-    ? raw.files.map((f: any) => ({
+    ? raw.files.map((f) => ({
         filename: f.filename,
         additions: f.additions,
         deletions: f.deletions,

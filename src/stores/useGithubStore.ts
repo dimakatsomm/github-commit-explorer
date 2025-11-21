@@ -65,7 +65,7 @@ export const useGithubStore = defineStore('github', () => {
     loadingRepos.value = true; error.value = null; rateLimited.value = false;
     try {
       repos.value = await fetchUserRepos(username);
-    } catch (e: any) {
+    } catch (e) {
       handleError(e);
     } finally {
       loadingRepos.value = false;
@@ -78,7 +78,7 @@ export const useGithubStore = defineStore('github', () => {
       const { commits: pageCommits, nextPage } = await fetchRepoCommits(username, repoName, page);
       if (page === 1) commits.value = pageCommits; else commits.value.push(...pageCommits);
       commitsPage.value = nextPage ?? page;
-    } catch (e: any) {
+    } catch (e) {
       handleError(e);
     } finally {
       loadingCommits.value = false;
@@ -92,7 +92,7 @@ export const useGithubStore = defineStore('github', () => {
     try {
       const detail = await fetchCommitDetails(username, repoName, sha);
       commitDetails.value[sha] = detail;
-    } catch (e: any) {
+    } catch (e) {
       handleError(e);
     } finally {
       loadingCommitDetail.value = false;
@@ -117,9 +117,9 @@ export const useGithubStore = defineStore('github', () => {
     return favourites.value.some((f: FavouriteCommit) => f.sha === sha);
   }
 
-  function handleError(e: any) {
-    if (e?.message?.includes('rate limit')) rateLimited.value = true;
-    error.value = e?.message ?? 'Unknown error';
+  function handleError(e: unknown) {
+    if (e instanceof Error && e.message.includes('rate limit')) rateLimited.value = true;
+    error.value = e instanceof Error ? e.message : 'Unknown error';
   }
 
   return {
