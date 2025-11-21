@@ -239,6 +239,55 @@ npm test -- --run
 git push origin feature/your-feature
 ```
 
+## 🚀 Deployment
+
+This project is configured for automatic deployment to **Vercel** (free tier) via GitHub Actions.
+
+### Setup Deployment
+
+1. **Create a Vercel account**
+   - Go to [vercel.com](https://vercel.com)
+   - Sign up with your GitHub account
+
+2. **Import your project**
+   - Click "Add New Project"
+   - Select your GitHub repository
+   - Vercel will auto-detect the Vite framework
+
+3. **Get deployment credentials**
+   - Install Vercel CLI: `npm i -g vercel`
+   - Run `vercel login`
+   - Run `vercel link` in project directory
+   - Get tokens:
+     - **VERCEL_TOKEN**: From [vercel.com/account/tokens](https://vercel.com/account/tokens)
+     - **VERCEL_ORG_ID**: Found in `.vercel/project.json`
+     - **VERCEL_PROJECT_ID**: Found in `.vercel/project.json`
+
+4. **Add secrets to GitHub**
+   - Go to your repository → Settings → Secrets and variables → Actions
+   - Add three repository secrets:
+     - `VERCEL_TOKEN`
+     - `VERCEL_ORG_ID`
+     - `VERCEL_PROJECT_ID`
+
+5. **Deploy**
+   ```bash
+   # Push to main branch triggers automatic deployment
+   git push origin main
+   ```
+
+### Manual Deployment
+
+```bash
+# Deploy to production
+vercel --prod
+
+# Deploy preview
+vercel
+```
+
+Your app will be live at: `https://your-project.vercel.app`
+
 ## 📚 Additional Documentation
 
 - **[ARCHITECTURE.md](./ARCHITECTURE.md)** - Detailed architecture and data flow documentation
