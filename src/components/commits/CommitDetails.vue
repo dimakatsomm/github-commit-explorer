@@ -2,14 +2,15 @@
   <Teleport to="body">
     <Transition name="modal">
       <div v-if="show && detail" class="modal-backdrop" @click.self="closeModal">
-        <div class="modal-dialog modal-dialog-scrollable modal-xl" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div ref="modalRef" class="modal-dialog modal-dialog-scrollable modal-xl" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
           <div class="modal-content">
             <div class="modal-header commit-detail-header text-white">
               <h5 class="modal-title mb-0" id="modalTitle">
-                <svg width="20" height="20" fill="currentColor" class="me-2" viewBox="0 0 16 16">
+                <svg width="20" height="20" fill="currentColor" class="me-2 d-none d-sm-inline" viewBox="0 0 16 16">
                   <path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0zM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0z"/>
                 </svg>
-                Commit Details
+                <span class="d-none d-sm-inline">Commit Details</span>
+                <span class="d-inline d-sm-none">Commit</span>
               </h5>
               <button type="button" class="btn-close btn-close-white" @click="closeModal" aria-label="Close"></button>
             </div>
@@ -27,30 +28,35 @@
                   {{ detail.authorName }} · {{ detail.date }}
                 </small>
               </p>
-              <h6 class="mt-4">Files Changed ({{ detail.files.length }})</h6>
+              <h6 class="mt-4"><span class="d-none d-sm-inline">Files Changed </span>({{ detail.files.length }})</h6>
               <div class="table-responsive">
                 <table class="table table-sm table-hover">
                   <thead>
                     <tr>
                       <th>File</th>
-                      <th class="text-center">Status</th>
-                      <th class="text-end">Additions</th>
-                      <th class="text-end">Deletions</th>
+                      <th class="text-center d-none d-md-table-cell">Status</th>
+                      <th class="text-end">+</th>
+                      <th class="text-end">-</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="f in detail.files" :key="f.filename">
-                      <td><code class="small">{{ f.filename }}</code></td>
-                      <td class="text-center"><span class="badge" :class="getStatusClass(f.status)">{{ f.status }}</span></td>
-                      <td class="text-end text-success">+{{ f.additions }}</td>
-                      <td class="text-end text-danger">-{{ f.deletions }}</td>
+                      <td>
+                        <code class="small text-break">{{ f.filename }}</code>
+                        <div class="d-md-none mt-1">
+                          <span class="badge" :class="getStatusClass(f.status)">{{ f.status }}</span>
+                        </div>
+                      </td>
+                      <td class="text-center d-none d-md-table-cell"><span class="badge" :class="getStatusClass(f.status)">{{ f.status }}</span></td>
+                      <td class="text-end text-success">{{ f.additions }}</td>
+                      <td class="text-end text-danger">{{ f.deletions }}</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" @click="closeModal">Close</button>
+              <button type="button" class="btn btn-secondary btn-sm w-100 w-sm-auto" @click="closeModal">Close</button>
             </div>
           </div>
         </div>
@@ -61,7 +67,8 @@
 
 <script setup lang="ts">
 import type { CommitDetail } from '@/types/commit';
-import { onMounted, onUnmounted } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
+import { useSwipe } from '@/composables';
 
 const props = defineProps<{ 
   detail: CommitDetail | null;
@@ -72,9 +79,21 @@ const emit = defineEmits<{
   close: [];
 }>();
 
+const modalRef = ref<HTMLElement | null>(null);
+
 function closeModal() {
   emit('close');
 }
+
+// Add swipe-down to close on mobile
+useSwipe(modalRef, {
+  onSwipeDown: () => {
+    if (props.show) {
+      closeModal();
+    }
+  },
+  threshold: 80
+});
 
 function handleEscape(e: KeyboardEvent) {
   if (e.key === 'Escape' && props.show) {
@@ -113,7 +132,7 @@ function getStatusClass(status: string) {
   justify-content: center;
   align-items: center;
   z-index: 1050;
-  padding: 1rem;
+  padding: 0.5rem;
 }
 
 .modal-dialog {
@@ -123,6 +142,21 @@ function getStatusClass(status: string) {
   max-width: 1140px;
   display: flex;
   flex-direction: column;
+}
+
+@media (max-width: 576px) {
+  .modal-backdrop {
+    padding: 0;
+  }
+  
+  .modal-dialog {
+    max-height: 100vh;
+    height: 100vh;
+  }
+  
+  .modal-content {
+    border-radius: 0;
+  }
 }
 
 .modal-content {

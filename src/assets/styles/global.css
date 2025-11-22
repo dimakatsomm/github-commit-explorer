@@ -19,7 +19,7 @@
   --color-danger: #dc3545;
   --color-info: #0dcaf0;
   
-  /* Neutral Colors */
+  /* Neutral Colors - Light Mode */
   --color-white: #ffffff;
   --color-gray-50: #f8f9fa;
   --color-gray-100: #e9ecef;
@@ -27,6 +27,19 @@
   --color-gray-300: #ced4da;
   --color-gray-600: #6c757d;
   --color-gray-900: #212529;
+  
+  /* Theme-adaptive colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #e9ecef;
+  --text-primary: #212529;
+  --text-secondary: #6c757d;
+  --text-muted: #6c757d;
+  --border-color: #dee2e6;
+  --card-bg: #ffffff;
+  --modal-bg: #ffffff;
+  --navbar-bg: #24292f;
+  --navbar-text: #ffffff;
   
   /* Scroll Behavior */
   scroll-behavior: smooth;
@@ -76,6 +89,28 @@
   --z-tooltip: 1070;
 }
 
+/* Dark Mode Colors */
+[data-theme="dark"] {
+  --bg-primary: #0d1117;
+  --bg-secondary: #161b22;
+  --bg-tertiary: #21262d;
+  --text-primary: #c9d1d9;
+  --text-secondary: #8b949e;
+  --text-muted: #8b949e;
+  --border-color: #30363d;
+  --card-bg: #161b22;
+  --modal-bg: #0d1117;
+  --navbar-bg: #010409;
+  --navbar-text: #f0f6fc;
+  
+  --color-gray-50: #161b22;
+  --color-gray-100: #21262d;
+  --color-gray-200: #30363d;
+  --color-gray-300: #484f58;
+  --color-gray-600: #8b949e;
+  --color-gray-900: #c9d1d9;
+}
+
 /* Global Reset & Base Styles */
 *,
 *::before,
@@ -87,12 +122,47 @@ body {
   font-family: var(--font-family-base);
   font-size: var(--font-size-base);
   line-height: 1.6;
-  color: var(--color-gray-900);
-  background-color: var(--color-gray-50);
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
   margin: 0;
   padding: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Mobile-first responsive font sizes */
+@media (max-width: 576px) {
+  body {
+    font-size: 0.9rem;
+  }
+  
+  h1, .h1 { font-size: 1.75rem !important; }
+  h2, .h2 { font-size: 1.5rem !important; }
+  h3, .h3 { font-size: 1.25rem !important; }
+  h4, .h4 { font-size: 1.1rem !important; }
+  h5, .h5 { font-size: 1rem !important; }
+  h6, .h6 { font-size: 0.9rem !important; }
+}
+
+/* Responsive heading utilities */
+.h2-md {
+  font-size: 1.5rem;
+}
+
+.h4-md {
+  font-size: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .h2-md {
+    font-size: 2rem;
+  }
+  
+  .h4-md {
+    font-size: 1.5rem;
+  }
 }
 
 /* Typography Utilities */
@@ -362,6 +432,181 @@ input:focus-visible,
 select:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
+}
+
+/* Mobile Touch Enhancements */
+@media (hover: none) and (pointer: coarse) {
+  /* Larger tap targets for mobile */
+  button, a[role="button"], .btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Remove hover effects on touch devices */
+  .repo-card:hover {
+    transform: none;
+  }
+  
+  /* Add active/tap feedback */
+  button:active,
+  a[role="button"]:active,
+  .btn:active,
+  .repo-card:active {
+    opacity: 0.7;
+    transform: scale(0.98);
+  }
+}
+
+/* Responsive container adjustments */
+@media (max-width: 576px) {
+  .container-fluid {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+  
+  .card {
+    border-radius: var(--radius-md);
+  }
+  
+  .modal-dialog {
+    margin: 0;
+  }
+}
+
+/* Responsive tables */
+@media (max-width: 768px) {
+  .table-responsive {
+    font-size: 0.875rem;
+  }
+  
+  .table th,
+  .table td {
+    padding: 0.5rem;
+  }
+}
+
+/* Text utilities for responsive design */
+.text-break {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/* Ensure Bootstrap navbar toggle works */
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+    padding: 1rem 0;
+  }
+}
+
+/* Dark Mode Component Styles */
+[data-theme="dark"] .app {
+  background-color: var(--bg-secondary);
+}
+
+[data-theme="dark"] .card {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .list-group-item {
+  background-color: var(--bg-tertiary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .modal-content {
+  background-color: var(--modal-bg);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .modal-body {
+  background-color: var(--modal-bg);
+}
+
+[data-theme="dark"] .modal-header {
+  background-color: var(--navbar-bg) !important;
+  border-bottom-color: var(--border-color);
+}
+
+[data-theme="dark"] .modal-footer {
+  background-color: var(--bg-tertiary);
+  border-top-color: var(--border-color);
+}
+
+[data-theme="dark"] .table {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .table th,
+[data-theme="dark"] .table td {
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .table-hover tbody tr:hover {
+  background-color: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .form-control {
+  background-color: var(--bg-tertiary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .form-control:focus {
+  background-color: var(--bg-tertiary);
+  border-color: var(--color-primary);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .form-select {
+  background-color: var(--bg-tertiary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .alert {
+  background-color: var(--bg-tertiary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .navbar-github {
+  background-color: var(--navbar-bg) !important;
+}
+
+[data-theme="dark"] .favourites-footer {
+  background-color: var(--card-bg);
+  border-top-color: var(--border-color);
+}
+
+[data-theme="dark"] .commit-sha {
+  background-color: rgba(13, 110, 253, 0.2);
+  border-color: rgba(13, 110, 253, 0.3);
+}
+
+[data-theme="dark"] code {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .repo-card {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .repo-card:hover {
+  border-color: var(--color-primary);
+  background-color: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .text-muted {
+  color: var(--text-muted) !important;
+}
+
+[data-theme="dark"] .modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.85);
 }
 
 /* Accessibility */

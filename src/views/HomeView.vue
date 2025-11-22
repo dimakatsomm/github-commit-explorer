@@ -1,5 +1,11 @@
 <template>
-  <div class="home">
+  <div ref="viewRef" class="home">
+    <PullToRefresh 
+      :isPulling="isPulling"
+      :isRefreshing="isRefreshing"
+      :pullDistance="pullDistance"
+      :threshold="80"
+    />
     <div v-if="loadingRepos" class="text-center py-5">
       <div class="spinner-border text-primary" role="status">
         <span class="visually-hidden">Loading repositories...</span>
@@ -13,9 +19,12 @@
       <button type="button" class="btn-close" @click="clearError" aria-label="Close"></button>
     </div>
     <section v-else>
-      <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>
-          <svg width="28" height="28" fill="currentColor" class="me-2" viewBox="0 0 16 16">
+      <div class="d-flex justify-content-between align-items-center mb-3 mb-md-4">
+        <h2 class="h3 h2-md mb-0">
+          <svg width="24" height="24" class="d-inline d-md-none me-2" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 0 1 1-1h8zM5 12.25v3.25a.25.25 0 0 0 .4.2l1.45-1.087a.25.25 0 0 1 .3 0L8.6 15.7a.25.25 0 0 0 .4-.2v-3.25a.25.25 0 0 0-.25-.25h-3.5a.25.25 0 0 0-.25.25z"/>
+          </svg>
+          <svg width="28" height="28" class="d-none d-md-inline me-2" fill="currentColor" viewBox="0 0 16 16">
             <path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 0 1 1-1h8zM5 12.25v3.25a.25.25 0 0 0 .4.2l1.45-1.087a.25.25 0 0 1 .3 0L8.6 15.7a.25.25 0 0 0 .4-.2v-3.25a.25.25 0 0 0-.25-.25h-3.5a.25.25 0 0 0-.25.25z"/>
           </svg>
           Repositories
@@ -32,12 +41,15 @@
       <RepoList v-else :repos="repos" @select="onSelectRepo" />
     </section>
 
-    <section v-if="selectedRepo" class="commits mt-5">
-      <h3 class="mb-3">
-        <svg width="24" height="24" fill="currentColor" class="me-2" viewBox="0 0 16 16">
+    <section v-if="selectedRepo" class="commits mt-4 mt-md-5">
+      <h3 class="mb-3 h5 h4-md">
+        <svg width="20" height="20" class="d-inline d-md-none me-2" fill="currentColor" viewBox="0 0 16 16">
           <path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0zM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0z"/>
         </svg>
-        Commits for <span class="text-primary">{{ selectedRepo.name }}</span>
+        <svg width="24" height="24" class="d-none d-md-inline me-2" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0zM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0z"/>
+        </svg>
+        <span class="d-none d-sm-inline">Commits for </span><span class="text-primary">{{ selectedRepo.name }}</span>
       </h3>
       <CommitToolbar
         :sortOrder="sortOrder"
@@ -56,12 +68,13 @@
 </template>
 
 <script setup lang="ts">
-import { watch } from 'vue';
-import { useNavigation, useRepos, useCommits, useFavourites } from '@/composables';
+import { watch, ref } from 'vue';
+import { useNavigation, useRepos, useCommits, useFavourites, usePullToRefresh } from '@/composables';
 import { useScrollRestoration } from '@/composables/useScrollRestoration';
 import RepoList from '@/components/repos/RepoList.vue';
 import CommitList from '@/components/commits/CommitList.vue';
 import CommitToolbar from '@/components/commits/CommitToolbar.vue';
+import PullToRefresh from '@/components/PullToRefresh.vue';
 
 const props = defineProps<{ username: string }>();
 
@@ -71,6 +84,17 @@ const { navigateToRepo } = useNavigation();
 const { repos, selectedRepo, isLoading: loadingRepos, error, fetchRepos, clearError } = useRepos();
 const { commits, sortOrder, changeSortOrder, loadNextPage } = useCommits();
 const { toggleFavourite, isFavourite } = useFavourites();
+
+const viewRef = ref<HTMLElement | null>(null);
+
+const { isPulling, isRefreshing, pullDistance } = usePullToRefresh(viewRef, {
+  onRefresh: async () => {
+    if (props.username) {
+      await fetchRepos(props.username);
+    }
+  },
+  threshold: 80
+});
 
 watch(() => props.username, (u: string) => {
   if (u) fetchRepos(u);

@@ -2,40 +2,17 @@
 
 A modern Vue 3 + TypeScript application for exploring GitHub repositories and commits, built with clean architecture principles and performance best practices.
 
-## 🚀 Quick Start
+## 🚀 Getting Started
 
-```bash
-# Install dependencies
-npm install
-
-# Start development server (http://localhost:5173)
-npm run dev
-
-# Run tests
-npm test
-
-# Build for production
-npm run build
-```
-
-## 📋 Features
-
-- **GitHub User Search** - Search any GitHub user with real-time validation
-- **Repository Browser** - View all public repositories with metadata (stars, forks, language)
-- **Commit Explorer** - Browse paginated commit history with sorting (newest/oldest)
-- **Favourites System** - Save and manage favourite commits with localStorage persistence
-- **Commit Details Modal** - View full commit details including file changes, diffs, and status
-- **Performance Optimized** - Debounced search (300ms), throttled persistence (300ms), memoized sorting
-- **Responsive Design** - Bootstrap 5 UI that works on all devices
-
-## 📦 Setup Instructions
+Follow these steps to get the application up and running on your local machine.
 
 ### Prerequisites
 
-- **Node.js** 18+
-- **npm** 9+
+Before you begin, ensure you have the following installed:
+- **Node.js** version 18 or higher
+- **npm** version 9 or higher
 
-### Installation Steps
+### Installation
 
 1. **Clone the repository**
    ```bash
@@ -48,23 +25,64 @@ npm run build
    npm install
    ```
 
-3. **Start development server**
+3. **Start the development server**
    ```bash
    npm run dev
    ```
-   The app will be available at `http://localhost:5173`
+   The application will be available at `http://localhost:5173`
 
-4. **Run tests**
-   ```bash
-   npm test          # Watch mode
-   npm test -- --run # Single run (CI/CD)
-   ```
+4. **Verify the installation**
+   - Open your browser and navigate to `http://localhost:5173`
+   - You should see the GitHub Commit Explorer home page
 
-5. **Build for production**
-   ```bash
-   npm run build
-   npm run preview   # Preview production build
-   ```
+### Development Commands
+
+```bash
+# Start development server with hot reload
+npm run dev
+
+# Run tests in watch mode
+npm test
+
+# Run tests once (for CI/CD)
+npm test -- --run
+
+# Build for production
+npm run build
+
+# Preview production build locally
+npm run preview
+
+# Type check
+npm run type-check
+
+# Lint code
+npm run lint
+```
+
+## 📋 Features
+
+### Core Functionality
+- **GitHub User Search** - Search any GitHub user with real-time validation
+- **Repository Browser** - View all public repositories with metadata (stars, forks, language)
+- **Commit Explorer** - Browse paginated commit history with sorting (newest/oldest)
+- **Favourites System** - Save and manage favourite commits with localStorage persistence
+- **Commit Details Modal** - View full commit details including file changes, diffs, and status
+- **Performance Optimized** - Debounced search (300ms), throttled persistence (300ms), memoized sorting
+
+### 📱 Progressive Web App Features
+- **PWA Support** - Install as a native-like app on mobile and desktop devices
+- **Offline Caching** - Service worker caches assets for offline functionality
+- **Dark Mode** - System-aware theme with manual toggle (auto/light/dark)
+- **Swipe Gestures** - Swipe down to close commit details modal on mobile
+- **Pull-to-Refresh** - Natural pull-down gesture to refresh repos and commits
+- **Fully Responsive** - Mobile-first design that works beautifully on phones, tablets, and desktops
+- **Touch Optimized** - Enhanced touch targets and gesture support for mobile devices
+
+### ♿ Accessibility
+- **WCAG 2.1 Compliant** - Keyboard navigation and screen reader support
+- **Semantic HTML** - Proper heading hierarchy and ARIA labels
+- **Focus Management** - Visible focus indicators and logical tab order
 
 ### Project Structure
 
@@ -75,14 +93,19 @@ src/
 ├── components/       # Reusable Vue components
 │   ├── commits/     # CommitList, CommitItem, CommitDetails, CommitToolbar
 │   ├── favourites/  # FavouriteList
-│   └── repos/       # RepoList
+│   ├── repos/       # RepoList
+│   ├── PullToRefresh.vue  # Pull-to-refresh indicator
+│   └── ThemeToggle.vue    # Dark mode toggle
 ├── composables/      # Composition API logic
 │   ├── useRepos.ts
 │   ├── useCommits.ts
 │   ├── useFavourites.ts
 │   ├── useNavigation.ts
 │   ├── useRouteParams.ts
-│   └── useScrollRestoration.ts
+│   ├── useScrollRestoration.ts
+│   ├── useTheme.ts           # Theme management (light/dark/auto)
+│   ├── useSwipe.ts           # Touch gesture detection
+│   └── usePullToRefresh.ts   # Pull-to-refresh logic
 ├── router/          # Vue Router configuration
 ├── services/        # Business logic & data transformations
 ├── stores/          # Pinia state management (useGithubStore)
@@ -91,11 +114,11 @@ src/
 └── views/           # Page-level components (HomeView, RepoView)
 ```
 
-## 🏗 Architecture Approach
+## 🏗 Architectural Approach
 
 ### Design Philosophy
 
-This project follows **clean architecture** and **separation of concerns**:
+This project follows **clean architecture** principles and **separation of concerns**:
 
 1. **Thin Components, Thick Domain Layer**
    - Components are presentational only (no business logic)
@@ -151,10 +174,10 @@ This project follows **clean architecture** and **separation of concerns**:
 
 ### Performance Strategy
 
-- **Debouncing** (300ms) - Search validation reduces unnecessary checks by 70-80%
-- **Throttling** (300ms) - localStorage writes prevent excessive I/O (90% reduction)
+- **Debouncing** - Search validation with configurable delay
+- **Throttling** - localStorage writes prevent excessive I/O
 - **Memoization** - Computed properties cache sorted/filtered data
-- **Lazy Loading** - Pagination for commit lists (30 per page)
+- **Lazy Loading** - Pagination for commit lists
 - **Optimistic Updates** - Instant UI feedback before persistence
 - **Scroll Restoration** - Remembers scroll position when navigating back
 - **Code Splitting** - Vue Router lazy loads views
@@ -176,32 +199,33 @@ npm test          # Watch mode for development
 npm test -- --run # Single run for CI/CD
 ```
 
-### Current Coverage
+### Current Test Coverage
 
-✅ **22 tests passing** (execution time: ~3 seconds)
+✅ **All tests passing**
 
-- **Store tests (10)** - fetchRepos, fetchCommits, fetchCommitDetail, toggleFavourite, localStorage persistence, sorting
-- **Transform tests (6)** - mapRepoResponse, mapCommitResponse, mapCommitDetailResponse
-- **Composable tests (6)** - useRepos, useCommits, useFavourites behavior
+- **Store tests** - fetchRepos, fetchCommits, fetchCommitDetail, toggleFavourite, localStorage persistence, sorting
+- **Transform tests** - mapRepoResponse, mapCommitResponse, mapCommitDetailResponse
+- **Composable tests** - useRepos, useCommits, useFavourites behaviour
+- **UI Component tests** - CommitItem, CommitList, CommitDetails, CommitToolbar, RepoList, FavouriteList
 
 ### Testing Philosophy
 
-- **No UI tests** - Components are thin and presentational
+- **Comprehensive UI tests** - All components tested for correct rendering and behaviour
 - **Mock external dependencies** - API calls mocked with Vitest
-- **Test behavior, not implementation** - Focus on outcomes
-- **Fast execution** - All tests complete in ~3 seconds
+- **Test behaviour, not implementation** - Focus on outcomes
+- **Fast execution** - Optimised test suite for quick feedback
 
 ## 🛠 Technology Stack
 
 | Technology | Version | Purpose |
 |-----------|---------|---------|
-| **Vue 3** | 3.5.0 | Reactive UI with Composition API |
-| **TypeScript** | 5.4.0 | Type-safe development |
-| **Pinia** | 2.1.7 | State management |
-| **Vue Router** | 4.x | Client-side routing |
-| **Vite** | 5.0.0 | Dev server & build tool |
-| **Vitest** | 1.0.0 | Unit testing |
-| **Bootstrap 5** | 5.x | UI components & utilities |
+| **Vue 3** | ^3.5.0 | Reactive UI with Composition API |
+| **TypeScript** | ^5.4.0 | Type-safe development |
+| **Pinia** | ^2.1.7 | State management |
+| **Vue Router** | ^4.6.3 | Client-side routing |
+| **Vite** | ^5.0.0 | Dev server & build tool |
+| **Vitest** | ^1.0.0 | Unit testing |
+| **Bootstrap 5** | ^5.3.8 | UI components & utilities |
 
 ## 🎯 Development Workflow
 
@@ -220,8 +244,8 @@ npm test -- --run # Single run for CI/CD
 - Keep functions **pure** and **testable**
 - Use **explicit TypeScript interfaces** for all data
 - Follow **single responsibility principle**
-- Components should be **< 200 lines**
-- Functions should be **< 40 lines**
+- Keep components focused and manageable
+- Keep functions small and single-purpose
 
 ### Git Workflow
 
@@ -239,64 +263,19 @@ npm test -- --run
 git push origin feature/your-feature
 ```
 
-## 🚀 Deployment
+## 🤝 Contributing
 
-This project is configured for automatic deployment to **Vercel** (free tier) via GitHub Actions.
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-### Setup Deployment
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'feat: add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-1. **Create a Vercel account**
-   - Go to [vercel.com](https://vercel.com)
-   - Sign up with your GitHub account
+## 📝 Licence
 
-2. **Import your project**
-   - Click "Add New Project"
-   - Select your GitHub repository
-   - Vercel will auto-detect the Vite framework
-
-3. **Get deployment credentials**
-   - Install Vercel CLI: `npm i -g vercel`
-   - Run `vercel login`
-   - Run `vercel link` in project directory
-   - Get tokens:
-     - **VERCEL_TOKEN**: From [vercel.com/account/tokens](https://vercel.com/account/tokens)
-     - **VERCEL_ORG_ID**: Found in `.vercel/project.json`
-     - **VERCEL_PROJECT_ID**: Found in `.vercel/project.json`
-
-4. **Add secrets to GitHub**
-   - Go to your repository → Settings → Secrets and variables → Actions
-   - Add three repository secrets:
-     - `VERCEL_TOKEN`
-     - `VERCEL_ORG_ID`
-     - `VERCEL_PROJECT_ID`
-
-5. **Deploy**
-   ```bash
-   # Push to main branch triggers automatic deployment
-   git push origin main
-   ```
-
-### Manual Deployment
-
-```bash
-# Deploy to production
-vercel --prod
-
-# Deploy preview
-vercel
-```
-
-Your app will be live at: `https://your-project.vercel.app`
-
-## 📚 Additional Documentation
-
-- **[ARCHITECTURE.md](./ARCHITECTURE.md)** - Detailed architecture and data flow documentation
-- **[UX_IMPROVEMENTS.md](./UX_IMPROVEMENTS.md)** - Performance optimizations and UX enhancements
-- **[.github/copilot-instructions.md](./.github/copilot-instructions.md)** - Coding standards and AI assistant guidelines
-
-## 📝 License
-
-MIT License - Free to use for learning and development
+MIT Licence - Free to use for learning and development
 
 ---
 

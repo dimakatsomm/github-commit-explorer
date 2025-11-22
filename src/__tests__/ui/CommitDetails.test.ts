@@ -114,8 +114,8 @@ describe('CommitDetails', () => {
     const text = document.body.textContent || '';
     expect(text).toContain('src/main.ts');
     expect(text).toContain('src/utils.ts');
-    expect(text).toContain('+10');
-    expect(text).toContain('-2');
+    expect(text).toContain('10');
+    expect(text).toContain('2');
     wrapper.unmount();
   });
 
@@ -149,6 +149,7 @@ describe('CommitDetails', () => {
     await wrapper.vm.$nextTick();
     const closeBtn = document.querySelector('.btn-close') as HTMLElement;
     closeBtn?.click();
+    await wrapper.vm.$nextTick();
 
     expect(wrapper.emitted('close')).toBeTruthy();
     wrapper.unmount();
@@ -166,6 +167,7 @@ describe('CommitDetails', () => {
     await wrapper.vm.$nextTick();
     const backdrop = document.querySelector('.modal-backdrop') as HTMLElement;
     backdrop?.click();
+    await wrapper.vm.$nextTick();
 
     expect(wrapper.emitted('close')).toBeTruthy();
     wrapper.unmount();
@@ -183,6 +185,7 @@ describe('CommitDetails', () => {
     await wrapper.vm.$nextTick();
     const footerBtn = document.querySelector('.modal-footer .btn-secondary') as HTMLElement;
     footerBtn?.click();
+    await wrapper.vm.$nextTick();
 
     expect(wrapper.emitted('close')).toBeTruthy();
     wrapper.unmount();

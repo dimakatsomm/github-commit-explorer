@@ -22,18 +22,20 @@
     </div>
     <transition name="collapse">
       <ul v-show="!isCollapsed" class="list-group list-group-flush">
-        <li v-for="f in favourites" :key="f.sha" class="list-group-item d-flex justify-content-between align-items-center favourite-item">
-          <div class="flex-grow-1" @click="emit('viewDetails', f.sha, f.repoName)" role="button" style="cursor: pointer;">
-            <code class="commit-sha">{{ f.sha.slice(0,7) }}</code>
-            <span class="ms-2">{{ f.message }}</span>
-            <span class="badge bg-secondary ms-2">{{ f.repoName }}</span>
+        <li v-for="f in favourites" :key="f.sha" class="list-group-item d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center favourite-item gap-2">
+          <div class="flex-grow-1 w-100" @click="emit('viewDetails', f.sha, f.repoName)" role="button" style="cursor: pointer;">
+            <div class="d-flex flex-wrap align-items-center gap-2">
+              <code class="commit-sha">{{ f.sha.slice(0,7) }}</code>
+              <span class="badge bg-secondary">{{ f.repoName }}</span>
+            </div>
+            <div class="mt-1 text-break small">{{ f.message }}</div>
           </div>
           <button 
             @click.stop="emit('removeFavourite', f.sha)" 
-            class="btn btn-sm btn-outline-danger ms-2"
+            class="btn btn-sm btn-outline-danger align-self-end align-self-sm-center"
             title="Remove from favourites"
             aria-label="Remove from favourites">
-            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
               <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
               <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
             </svg>

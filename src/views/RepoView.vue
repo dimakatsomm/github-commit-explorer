@@ -1,11 +1,20 @@
 <template>
-  <div v-if="selectedRepo" class="repo-view">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h2>
-        <svg width="28" height="28" fill="currentColor" class="me-2" viewBox="0 0 16 16">
+  <div ref="viewRef" v-if="selectedRepo" class="repo-view">
+    <PullToRefresh 
+      :isPulling="isPulling"
+      :isRefreshing="isRefreshing"
+      :pullDistance="pullDistance"
+      :threshold="80"
+    />
+    <div class="d-flex justify-content-between align-items-center mb-3 mb-md-4">
+      <h2 class="h3 h2-md mb-0">
+        <svg width="24" height="24" class="d-inline d-md-none me-2" fill="currentColor" viewBox="0 0 16 16">
           <path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0zM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0z"/>
         </svg>
-        <span class="text-primary">{{ selectedRepo.name }}</span> Commits
+        <svg width="28" height="28" class="d-none d-md-inline me-2" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0zM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0z"/>
+        </svg>
+        <span class="text-primary">{{ selectedRepo.name }}</span> <span class="d-none d-sm-inline">Commits</span>
       </h2>
     </div>
     <CommitToolbar :sortOrder="sortOrder" @loadMore="loadMore" @changeSort="changeSort" />
@@ -42,11 +51,12 @@
 
 <script setup lang="ts">
 import { watch, onMounted, ref, computed } from 'vue';
-import { useNavigation, useRouteParams, useRepos, useCommits, useFavourites } from '@/composables';
+import { useNavigation, useRouteParams, useRepos, useCommits, useFavourites, usePullToRefresh } from '@/composables';
 import { useScrollRestoration } from '@/composables/useScrollRestoration';
 import CommitToolbar from '@/components/commits/CommitToolbar.vue';
 import CommitList from '@/components/commits/CommitList.vue';
 import CommitDetails from '@/components/commits/CommitDetails.vue';
+import PullToRefresh from '@/components/PullToRefresh.vue';
 
 const props = defineProps<{ name: string }>();
 
@@ -70,6 +80,16 @@ const { favourites, toggleFavourite, isFavourite } = useFavourites();
 
 const showModal = ref(false);
 const selectedCommitSha = ref<string | null>(null);
+const viewRef = ref<HTMLElement | null>(null);
+
+const { isPulling, isRefreshing, pullDistance } = usePullToRefresh(viewRef, {
+  onRefresh: async () => {
+    if (selectedRepo.value && username.value) {
+      await fetchCommits(username.value, selectedRepo.value.name, 1);
+    }
+  },
+  threshold: 80
+});
 
 const selectedCommitDetail = computed(() => {
   return selectedCommitSha.value ? getCommitDetail(selectedCommitSha.value) : null;

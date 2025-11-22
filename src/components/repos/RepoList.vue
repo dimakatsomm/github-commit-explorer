@@ -1,6 +1,6 @@
 <template>
   <transition-group name="fade" tag="div" class="row g-3">
-    <div v-for="r in repos" :key="r.id" class="col-md-6 col-lg-4">
+    <div v-for="r in repos" :key="r.id" class="col-12 col-sm-6 col-lg-4">
       <div
         class="card h-100 repo-card"
         tabindex="0"
@@ -47,6 +47,34 @@ function select(id: string) {
 </script>
 
 <style scoped>
+.repo-card {
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #dee2e6;
+  min-height: 180px;
+}
+
+.repo-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-color: #0d6efd;
+}
+
+.repo-card:focus {
+  outline: 2px solid #0d6efd;
+  outline-offset: 2px;
+}
+
+@media (max-width: 576px) {
+  .repo-card {
+    min-height: 160px;
+  }
+  
+  .repo-card:active {
+    transform: scale(0.98);
+  }
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.3s ease, transform 0.3s ease;
