@@ -9,7 +9,8 @@ describe('mapRepoResponse', () => {
       description: null,
       stargazers_count: 10,
       forks_count: 2,
-      language: 'TypeScript'
+      language: 'TypeScript',
+      html_url: 'https://github.com/user/test-repo'
     };
     const result = mapRepoResponse(raw);
     expect(result).toEqual({
@@ -18,7 +19,8 @@ describe('mapRepoResponse', () => {
       description: '',
       stars: 10,
       forks: 2,
-      language: 'TypeScript'
+      language: 'TypeScript',
+      url: 'https://github.com/user/test-repo'
     });
   });
 
@@ -29,12 +31,14 @@ describe('mapRepoResponse', () => {
       description: null,
       stargazers_count: 0,
       forks_count: 0,
-      language: null
+      language: null,
+      html_url: null
     };
     const result = mapRepoResponse(raw);
     expect(result.name).toBe('minimal');
     expect(result.description).toBe('');
     expect(result.language).toBe('N/A');
+    expect(result.url).toBe('');
   });
 });
 
