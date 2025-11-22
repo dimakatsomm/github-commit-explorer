@@ -9,46 +9,40 @@
           <span class="d-none d-md-inline">GitHub Commit Explorer</span>
           <span class="d-inline d-md-none">GH Explorer</span>
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSearch" aria-controls="navbarSearch" aria-expanded="false" aria-label="Toggle search">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSearch">
-          <div class="d-flex flex-column flex-lg-row ms-auto align-items-stretch align-items-lg-center w-100 w-lg-auto mt-3 mt-lg-0">
-            <div class="flex-grow-1 flex-lg-grow-0">
+        <div class="d-flex ms-auto flex-column align-items-end">
+          <div class="d-flex gap-2">
+            <div>
               <input
                 v-model="usernameInput"
                 @keyup.enter="onSearch"
                 @input="validateUsername"
                 type="text"
-                class="form-control me-lg-2 mb-2 mb-lg-0"
+                class="form-control"
                 :class="{ 'is-invalid': validationError }"
                 placeholder="Enter GitHub username"
+                style="width: 250px;"
                 autocomplete="off"
                 autocapitalize="off"
                 spellcheck="false"
                 required />
-              <small v-if="validationError" class="text-danger d-block d-lg-none">{{ validationError }}</small>
             </div>
-            <div class="d-flex gap-2">
-              <ThemeToggle class="d-none d-lg-block" />
-              <button @click="onSearch" :disabled="!usernameInput.trim() || validationError !== null || isSearching" class="btn btn-primary flex-grow-1 flex-lg-grow-0">
-                <span v-if="isSearching" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-                <svg v-else width="16" height="16" fill="currentColor" class="me-1" viewBox="0 0 16 16">
-                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-                </svg>
-                <span class="d-none d-sm-inline">{{ isSearching ? 'Searching...' : 'Search' }}</span>
-                <span class="d-inline d-sm-none">{{ isSearching ? '...' : 'Go' }}</span>
-              </button>
-              <button v-if="activeUsername" @click="goHome" class="btn btn-outline-light flex-grow-1 flex-lg-grow-0">
-                <svg width="16" height="16" fill="currentColor" class="d-inline d-sm-none" viewBox="0 0 16 16">
-                  <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5ZM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5 5 5Z"/>
-                </svg>
-                <span class="d-none d-sm-inline">Home</span>
-              </button>
-              <ThemeToggle class="d-lg-none" />
-            </div>
-            <small v-if="validationError" class="text-danger mt-2 d-none d-lg-block" style="position: absolute; top: 100%; right: 0;">{{ validationError }}</small>
+            <button @click="onSearch" :disabled="!usernameInput.trim() || validationError !== null || isSearching" class="btn btn-primary">
+              <span v-if="isSearching" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+              <svg v-else width="16" height="16" fill="currentColor" class="me-1" viewBox="0 0 16 16">
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+              </svg>
+              <span class="d-none d-sm-inline">{{ isSearching ? 'Searching...' : 'Search' }}</span>
+              <span class="d-inline d-sm-none">{{ isSearching ? '...' : 'Go' }}</span>
+            </button>
+            <button v-if="activeUsername" @click="goHome" class="btn btn-outline-light">
+              <svg width="16" height="16" fill="currentColor" class="d-inline d-sm-none" viewBox="0 0 16 16">
+                <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5ZM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5 5 5Z"/>
+              </svg>
+              <span class="d-none d-sm-inline">Home</span>
+            </button>
+            <ThemeToggle />
           </div>
+          <small v-if="validationError" class="text-danger mt-1" style="margin-right: auto;">{{ validationError }}</small>
         </div>
       </div>
     </nav>
