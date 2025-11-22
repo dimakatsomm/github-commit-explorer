@@ -14,7 +14,21 @@
         <svg width="28" height="28" class="d-none d-md-inline me-2" fill="currentColor" viewBox="0 0 16 16">
           <path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0zM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0z"/>
         </svg>
-        <span class="text-primary">{{ selectedRepo.name }}</span> <span class="d-none d-sm-inline">Commits</span>
+        <a 
+          :href="selectedRepo.url" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          class="text-primary text-decoration-none"
+          style="cursor: pointer;"
+          :title="`Open ${selectedRepo.name} on GitHub`"
+        >
+          {{ selectedRepo.name }}
+          <svg width="14" height="14" fill="currentColor" class="ms-1" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/>
+            <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/>
+          </svg>
+        </a>
+        <span class="d-none d-sm-inline ms-2">Commits</span>
       </h2>
     </div>
     <CommitToolbar :sortOrder="sortOrder" @loadMore="loadMore" @changeSort="changeSort" />

@@ -5,4 +5,5 @@ export interface Repo {
   stars: number;
   forks: number;
   language: string;
+  url: string;
 }

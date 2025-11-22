@@ -10,7 +10,8 @@ export function mapRepoResponse(raw: GitHubRepoResponse): Repo {
     description: raw.description ?? '',
     stars: raw.stargazers_count ?? 0,
     forks: raw.forks_count ?? 0,
-    language: raw.language ?? 'N/A'
+    language: raw.language ?? 'N/A',
+    url: raw.html_url ?? ''
   };
 }
 
